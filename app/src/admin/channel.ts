@@ -109,9 +109,17 @@ export const ChannelInfos: Record<string, ChannelInfo> = {
       "gpt-4-turbo-preview",
       "gpt-4-vision-preview",
       "gpt-4-1106-vision-preview",
+      "gpt-4-turbo",
+      "gpt-4-turbo-2024-04-09",
       "gpt-4-32k",
       "gpt-4-32k-0314",
       "gpt-4-32k-0613",
+      "gpt-4o",
+      "gpt-4o-2024-05-13",
+      "gpt-4o-2024-08-06",
+      "gpt-4o-mini",
+      "gpt-4o-mini-2024-07-18",
+      "chatgpt-4o-latest",
       "dalle",
       "dall-e-2",
       "dall-e-3",
@@ -142,6 +150,8 @@ export const ChannelInfos: Record<string, ChannelInfo> = {
       "gpt-4-turbo-preview",
       "gpt-4-vision-preview",
       "gpt-4-1106-vision-preview",
+      "gpt-4-turbo",
+      "gpt-4-turbo-2024-04-09",
       "gpt-4-32k",
       "gpt-4-32k-0314",
       "gpt-4-32k-0613",
@@ -178,10 +188,12 @@ export const ChannelInfos: Record<string, ChannelInfo> = {
     endpoint: "wss://spark-api.xf-yun.com",
     format: "<app-id>|<api-secret>|<api-key>",
     models: [
-      "spark-desk-v1.5",
-      "spark-desk-v2",
-      "spark-desk-v3",
-      "spark-desk-v3.5",
+      "spark-desk-lite",
+      "spark-desk-pro",
+      "spark-desk-pro-128k",
+      "spark-desk-max",
+      "spark-desk-max-32k",
+      "spark-desk-4.0-ultra",
     ],
   },
   chatglm: {
@@ -238,7 +250,13 @@ export const ChannelInfos: Record<string, ChannelInfo> = {
   palm: {
     endpoint: "https://generativelanguage.googleapis.com",
     format: "<api-key>",
-    models: ["chat-bison-001", "gemini-pro", "gemini-pro-vision"],
+    models: [
+      "chat-bison-001",
+      "gemini-pro",
+      "gemini-pro-vision",
+      "gemini-1.5-pro-latest",
+      "gemini-1.5-flash-latest",
+    ],
     description:
       "> Google Gemini / PaLM2 密钥格式为 **api-key**，接入点填写 *https://generativelanguage.googleapis.com* 或其反代地址 \n" +
       "> Google 对请求 IP 地域有限制，可能出现 **User Location Is Not Supported** 的错误，可以看运气通过反代解决。 \n" +

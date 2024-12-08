@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: chatnio
       MYSQL_USER: chatnio
       MYSQL_PASSWORD: chatnio123456!
+      TZ: Asia/Shanghai
     expose:
       - "3306"
     volumes:
@@ -66,7 +67,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 30
+    command: --interval 3600 --stop-timeout 60
     networks:
       - chatnio-network
 

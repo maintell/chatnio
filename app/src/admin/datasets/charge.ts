@@ -62,10 +62,28 @@ export const pricing: PricingDataset = [
       "gpt-4-turbo-preview",
       "gpt-4-1106-vision-preview",
       "gpt-4-vision-preview",
+      "gpt-4-turbo",
+      "gpt-4-turbo-2024-04-09",
     ],
     input: 0.01,
     output: 0.03,
   },
+  {
+    models: ["gpt-4o", "gpt-4o-2024-05-13", "chatgpt-4o-latest"],
+    input: 0.005,
+    output: 0.015,
+  },
+  {
+    models: ["gpt-4o-2024-08-06"],
+    input: 0.0025,
+    output: 0.01,
+  },
+  {
+    models: ["gpt-4o-mini", "gpt-4o-mini-2024-07-18"],
+    input: 0.00015,
+    output: 0.0006,
+  },
+
   {
     models: ["gpt-4-32k", "gpt-4-32k-0314", "gpt-4-32k-0613"],
     input: 0.06,
@@ -137,15 +155,27 @@ export const pricing: PricingDataset = [
     billing_type: timesBilling,
   },
   {
-    models: ["spark-desk-v1.5"],
-    input: 0.015,
-    output: 0.015,
+    models: ["spark-desk-lite"], // free
+    input: 0.001,
+    output: 0.001,
     currency: Currency.CNY,
   },
   {
-    models: ["spark-desk-v2", "spark-desk-v3", "spark-desk-v3.5"],
+    models: ["spark-desk-pro", "spark-desk-pro-128k","spark-desk-max"],
     input: 0.03,
     output: 0.03,
+    currency: Currency.CNY,
+  },
+  {
+    models: ["spark-desk-max-32k"],
+    input: 0.032,
+    output: 0.032,
+    currency: Currency.CNY,
+  },
+  {
+    models: ["spark-desk-4.0-ultra"],
+    input: 0.1,
+    output: 0.1,
     currency: Currency.CNY,
   },
   {
@@ -206,7 +236,12 @@ export const pricing: PricingDataset = [
     output: 0.001,
   },
   {
-    models: ["gemini-pro", "gemini-pro-vision"],
+    models: [
+      "gemini-pro",
+      "gemini-pro-vision",
+      "gemini-1.5-pro-latest",
+      "gemini-1.5-flash-latest",
+    ],
     input: 0.000125,
     output: 0.000375,
   },
@@ -214,6 +249,12 @@ export const pricing: PricingDataset = [
     models: ["hunyuan"],
     input: 0.1,
     output: 0.1,
+    currency: Currency.CNY,
+  },
+  {
+    models: ["deepseek-chat", "deepseek-coder"],
+    input: 0.001,
+    output: 0.002,
     currency: Currency.CNY,
   },
   {

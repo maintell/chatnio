@@ -3,12 +3,15 @@ package globals
 import (
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 const ChatMaxThread = 5
 const AnonymousMaxThread = 1
+
+var HttpMaxTimeout = 30 * time.Minute
 
 var AllowedOrigins []string
 
@@ -20,46 +23,37 @@ var CacheAcceptedModels []string
 var CacheAcceptedExpire int64
 var CacheAcceptedSize int64
 var AcceptImageStore bool
+var AcceptPromptStore bool
 var CloseRegistration bool
 var CloseRelay bool
 
-var EpayBusinessId string
-var EpayBusinessKey string
-var EpayEndpoint string
-var EpayEnabled bool
-var EpayMethods []string
-
-var SoftAuthPass byte
-var SoftDomain []byte
-var SoftName []byte
+var SearchEndpoint string
+var SearchCrop bool
+var SearchCropLength int
+var SearchEngines string    // e.g. "google,bing"
+var SearchImageProxy string // e.g. "True", "False"
+var SearchSafeSearch int    // e.g. 0: None, 1: Moderation, 2: Strict
 
 func OriginIsAllowed(uri string) bool {
-	instance, err := url.Parse(uri)
-	if err != nil {
+	if len(AllowedOrigins) == 0 {
+		// if allowed origins is empty, allow all origins
+		return true
+	}
+
+	instance, _ := url.Parse(uri)
+	if instance == nil {
 		return false
 	}
 
-	if instance.Scheme == "file" {
+	if instance.Hostname() == "localhost" || instance.Scheme == "file" {
 		return true
 	}
 
-	if instance.Hostname() == "localhost" || strings.HasPrefix(instance.Hostname(), "localhost") ||
-		instance.Hostname() == "127.0.0.1" || strings.HasPrefix(instance.Hostname(), "127.0.0.1") ||
-		strings.HasPrefix(instance.Hostname(), "192.168.") || strings.HasPrefix(instance.Hostname(), "10.") {
-		return true
+	if strings.HasPrefix(instance.Host, "www.") {
+		instance.Host = instance.Host[4:]
 	}
 
-	// get top level domain (example: sub.chatnio.net -> chatnio.net, chatnio.net -> chatnio.net)
-	// if the domain is in the allowed origins, return true
-
-	allow := string(SoftDomain)
-
-	domain := instance.Hostname()
-	if strings.HasSuffix(domain, allow) {
-		return true
-	}
-
-	return false
+	return in(instance.Host, AllowedOrigins)
 }
 
 func OriginIsOpen(c *gin.Context) bool {
@@ -86,10 +80,14 @@ const (
 	GPT40125Preview       = "gpt-4-0125-preview"
 	GPT4TurboPreview      = "gpt-4-turbo-preview"
 	GPT4VisionPreview     = "gpt-4-vision-preview"
+	GPT4Turbo             = "gpt-4-turbo"
+	GPT4Turbo20240409     = "gpt-4-turbo-2024-04-09"
 	GPT41106VisionPreview = "gpt-4-1106-vision-preview"
 	GPT432k               = "gpt-4-32k"
 	GPT432k0314           = "gpt-4-32k-0314"
 	GPT432k0613           = "gpt-4-32k-0613"
+	GPT4O                 = "gpt-4o"
+	GPT4O20240513         = "gpt-4o-2024-05-13"
 	Dalle                 = "dalle"
 	Dalle2                = "dall-e-2"
 	Dalle3                = "dall-e-3"
@@ -100,13 +98,17 @@ const (
 	Claude2200k           = "claude-2.1"
 	Claude3               = "claude-3"
 	ClaudeSlack           = "claude-slack"
-	SparkDesk             = "spark-desk-v1.5"
-	SparkDeskV2           = "spark-desk-v2"
-	SparkDeskV3           = "spark-desk-v3"
-	SparkDeskV35          = "spark-desk-v3.5"
+	SparkDeskLite         = "spark-desk-lite"
+	SparkDeskPro          = "spark-desk-pro"
+	SparkDeskPro128K      = "spark-desk-pro-128k"
+	SparkDeskMax          = "spark-desk-max"
+	SparkDeskMax32K       = "spark-desk-max-32k"
+	SparkDeskV4Ultra      = "spark-desk-4.0-ultra"
 	ChatBison001          = "chat-bison-001"
 	GeminiPro             = "gemini-pro"
 	GeminiProVision       = "gemini-pro-vision"
+	Gemini15ProLatest     = "gemini-1.5-pro-latest"
+	Gemini15FlashLatest   = "gemini-1.5-flash-latest"
 	BingCreative          = "bing-creative"
 	BingBalanced          = "bing-balanced"
 	BingPrecise           = "bing-precise"
@@ -138,10 +140,14 @@ var OpenAIDalleModels = []string{
 }
 
 var VisionModels = []string{
-	GPT4VisionPreview, GPT41106VisionPreview, // openai
-	GeminiProVision,     // gemini
+	GPT4VisionPreview, GPT41106VisionPreview, GPT4Turbo, GPT4Turbo20240409, GPT4O, GPT4O20240513, // openai
+	GeminiProVision, Gemini15ProLatest, Gemini15FlashLatest, // gemini
 	Claude3,             // anthropic
 	ZhiPuChatGLM4Vision, // chatglm
+}
+
+var VisionSkipModels = []string{
+	GPT4TurboPreview,
 }
 
 func in(value string, slice []string) bool {
@@ -159,5 +165,5 @@ func IsOpenAIDalleModel(model string) bool {
 }
 
 func IsVisionModel(model string) bool {
-	return in(model, VisionModels)
+	return in(model, VisionModels) && !in(model, VisionSkipModels)
 }
